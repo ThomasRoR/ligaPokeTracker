@@ -11,14 +11,13 @@ window.SUPABASE_KEY = window.SUPABASE_KEY || 'sb_publishable_uLbWQZSNPiGzZcTr_Kw
  * 8 Target Mega Evolution Block Expansions Metadata
  */
 const MOCK_EXPANSIONS = [
-  { id: 1, code: 'PRC', name: 'XY - Primal Clash', release_date: '2015-02-04' },
-  { id: 2, code: 'ROS', name: 'XY - Roaring Skies', release_date: '2015-05-06' },
-  { id: 3, code: 'AOR', name: 'XY - Ancient Origins', release_date: '2015-08-12' },
-  { id: 4, code: 'BKT', name: 'XY - BREAKthrough', release_date: '2015-11-04' },
-  { id: 5, code: 'BKP', name: 'XY - BREAKpoint', release_date: '2016-02-03' },
-  { id: 6, code: 'FCO', name: 'XY - Fates Collide', release_date: '2016-05-02' },
-  { id: 7, code: 'STS', name: 'XY - Steam Siege', release_date: '2016-08-03' },
-  { id: 8, code: 'EVO', name: 'XY - Evolutions', release_date: '2016-11-02' }
+  { id: 1, code: 'PBL', name: 'Coleção Poderes de Batalha', release_date: '2016-01-01' },
+  { id: 2, code: 'ASC', name: 'Coleção Ascensão', release_date: '2016-01-01' },
+  { id: 3, code: 'POR', name: 'Coleção Portais', release_date: '2016-01-01' },
+  { id: 4, code: 'CRI', name: 'Coleção Criadores', release_date: '2016-01-01' },
+  { id: 5, code: 'MEG', name: 'Coleção Mega Evolução', release_date: '2016-01-01' },
+  { id: 6, code: 'MEP', name: 'Coleção Mega Poderes', release_date: '2016-01-01' },
+  { id: 7, code: 'PFL', name: 'Coleção Poderes de Fogo e Luz', release_date: '2016-01-01' }
 ];
 
 /**
