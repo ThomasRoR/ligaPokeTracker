@@ -84,9 +84,11 @@ class ScraperHTTPClient:
                 time.sleep(REQUEST_DELAY_SECONDS * 3) # Give it extra time to pass JS challenge
                 
                 content = self._page.content()
-                if response and response.status == 403:
+                is_cloudflare = "Just a moment..." in content or "cloudflare" in content.lower() or "Desafio" in content or "Verificando" in content
+                
+                if response and response.status == 403 and not is_cloudflare:
                     logger.warning(f"Playwright got HTTP 403 on attempt {attempt}. Retrying...")
-                elif "Just a moment..." in content or "cloudflare" in content.lower() or "Desafio" in content or "Verificando" in content:
+                elif is_cloudflare:
                     logger.warning(f"Cloudflare challenge detected! Waiting 20 seconds for you to solve it manually (Attempt {attempt})...")
                     time.sleep(20)
                     content = self._page.content()
@@ -95,6 +97,8 @@ class ScraperHTTPClient:
                         return content
                     else:
                         logger.warning("Cloudflare challenge still present after 20 seconds. Retrying...")
+                else:
+                    return content
                     
             except Exception as exc:
                 logger.warning(f"Playwright request failed ({exc}) for {url}. Attempt {attempt}/{MAX_RETRIES}")
