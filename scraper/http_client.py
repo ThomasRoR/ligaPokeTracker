@@ -35,7 +35,7 @@ class ScraperHTTPClient:
         """Initializes Playwright browser session with Stealth to bypass Cloudflare."""
         try:
             from playwright.sync_api import sync_playwright
-            from playwright_stealth import stealth_sync
+            from playwright_stealth import Stealth
 
             self._playwright = sync_playwright().start()
             self._browser = self._playwright.chromium.launch(headless=False)
@@ -44,7 +44,7 @@ class ScraperHTTPClient:
                 viewport={"width": 1920, "height": 1080}
             )
             self._page = self._context.new_page()
-            stealth_sync(self._page)
+            Stealth().apply_stealth_sync(self._page)
             
             logger.info("Playwright Stealth browser initialized successfully.")
         except ImportError as e:
