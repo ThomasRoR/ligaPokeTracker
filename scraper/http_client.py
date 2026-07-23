@@ -38,7 +38,7 @@ class ScraperHTTPClient:
             from playwright_stealth import stealth_sync
 
             self._playwright = sync_playwright().start()
-            self._browser = self._playwright.chromium.launch(headless=True)
+            self._browser = self._playwright.chromium.launch(headless=False)
             self._context = self._browser.new_context(
                 user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
                 viewport={"width": 1920, "height": 1080}
