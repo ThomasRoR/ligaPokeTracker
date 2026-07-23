@@ -31,14 +31,23 @@ class ScraperHTTPClient:
         self._init_session()
 
     def _init_session(self):
-        """Initializes Python requests session if requests library is installed."""
+        """Initializes cloudscraper session to bypass Cloudflare protection."""
         try:
-            import requests
-            self._session = requests.Session()
+            import cloudscraper
+            self._session = cloudscraper.create_scraper(
+                browser={'browser': 'chrome', 'platform': 'windows', 'mobile': False}
+            )
             self._session.headers.update(self.headers)
+            logger.info("Cloudscraper initialized successfully.")
         except ImportError:
-            logger.warning("requests library not installed. Using mock transport mode.")
-            self._session = None
+            try:
+                import requests
+                self._session = requests.Session()
+                self._session.headers.update(self.headers)
+                logger.warning("cloudscraper not installed. Using basic requests.")
+            except ImportError:
+                logger.warning("requests library not installed. Using mock transport mode.")
+                self._session = None
 
     def fetch_expansion_page(self, expansion_code: str, page: int = 1) -> str:
         """
