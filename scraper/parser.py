@@ -12,98 +12,68 @@ logger = logging.getLogger(__name__)
 
 # Fallback HTML Fixtures for Mega Evolution block cards when offline or running tests
 SAMPLE_HTML_FIXTURES = {
-    "ROS": """
+    "PBL": """
     <div class="card-listing-container">
-        <div class="item-card" data-id="1001">
-            <div class="card-name"><a href="/?view=cards/card&card=M+Rayquaza+EX&ed=ROS" title="M Rayquaza EX">M Rayquaza EX</a></div>
+        <div class="item-card" data-id="101">
+            <div class="card-name"><a href="#">M Mewtwo EX</a></div>
+            <div class="card-number">64/162</div>
+            <div class="card-rarity" title="Ultra Rara">Ultra Rara</div>
+            <div class="card-image"><img class="card-img" src="https://repositorio.ligapokemon.com.br/images/cartas/BKT/64.jpg" alt="M Mewtwo EX" /></div>
+            <div class="price-box">
+                <span class="preco-menor">R$ 150,00</span>
+                <span class="preco-medio">R$ 180,00</span>
+            </div>
+        </div>
+        <div class="item-card" data-id="102">
+            <div class="card-name"><a href="#">M Houndoom EX</a></div>
+            <div class="card-number">22/162</div>
+            <div class="card-rarity" title="Ultra Rara">Ultra Rara</div>
+            <div class="card-image"><img class="card-img" src="https://repositorio.ligapokemon.com.br/images/cartas/BKT/22.jpg" alt="M Houndoom EX" /></div>
+            <div class="price-box">
+                <span class="preco-menor">R$ 45,00</span>
+                <span class="preco-medio">R$ 60,00</span>
+            </div>
+        </div>
+    </div>
+    """,
+    "ASC": """
+    <div class="card-listing-container">
+        <div class="item-card" data-id="201">
+            <div class="card-name"><a href="#">M Rayquaza EX</a></div>
             <div class="card-number">61/108</div>
             <div class="card-rarity" title="Ultra Rara">Ultra Rara</div>
             <div class="card-image"><img class="card-img" src="https://repositorio.ligapokemon.com.br/images/cartas/ROS/61.jpg" alt="M Rayquaza EX" /></div>
             <div class="price-box">
-                <span class="preco-menor">R$ 145,90</span>
-                <span class="preco-medio">R$ 180,00</span>
-            </div>
-        </div>
-        <div class="item-card" data-id="1002">
-            <div class="card-name"><a href="/?view=cards/card&card=M+Latios+EX&ed=ROS" title="M Latios EX">M Latios EX</a></div>
-            <div class="card-number">59/108</div>
-            <div class="card-rarity" title="Ultra Rara">Ultra Rara</div>
-            <div class="card-image"><img class="card-img" src="https://repositorio.ligapokemon.com.br/images/cartas/ROS/59.jpg" alt="M Latios EX" /></div>
-            <div class="price-box">
-                <span class="preco-menor">R$ 42,50</span>
-                <span class="preco-medio">R$ 55,00</span>
-            </div>
-        </div>
-        <div class="item-card" data-id="1003">
-            <div class="card-name"><a href="/?view=cards/card&card=Shaymin+EX&ed=ROS" title="Shaymin EX">Shaymin EX</a></div>
-            <div class="card-number">77/108</div>
-            <div class="card-rarity" title="Ultra Rara">Ultra Rara</div>
-            <div class="card-image"><img class="card-img" src="https://repositorio.ligapokemon.com.br/images/cartas/ROS/77.jpg" alt="Shaymin EX" /></div>
-            <div class="price-box">
-                <span class="preco-menor">R$ 89,00</span>
-                <span class="preco-medio">R$ 110,00</span>
+                <span class="preco-menor">R$ 190,00</span>
+                <span class="preco-medio">R$ 220,00</span>
             </div>
         </div>
     </div>
     """,
-    "EVO": """
+    "POR": """
     <div class="card-listing-container">
-        <div class="item-card" data-id="2001">
-            <div class="card-name"><a href="/?view=cards/card&card=M+Charizard+EX&ed=EVO" title="M Charizard EX">M Charizard EX</a></div>
-            <div class="card-number">13/108</div>
+        <div class="item-card" data-id="301">
+            <div class="card-name"><a href="#">M Alakazam EX</a></div>
+            <div class="card-number">26/124</div>
             <div class="card-rarity" title="Ultra Rara">Ultra Rara</div>
-            <div class="card-image"><img class="card-img" src="https://repositorio.ligapokemon.com.br/images/cartas/EVO/13.jpg" alt="M Charizard EX" /></div>
+            <div class="card-image"><img class="card-img" src="https://repositorio.ligapokemon.com.br/images/cartas/FCO/26.jpg" alt="M Alakazam EX" /></div>
             <div class="price-box">
-                <span class="preco-menor">R$ 250,00</span>
-                <span class="preco-medio">R$ 310,00</span>
-            </div>
-        </div>
-        <div class="item-card" data-id="2002">
-            <div class="card-name"><a href="/?view=cards/card&card=M+Blastoise+EX&ed=EVO" title="M Blastoise EX">M Blastoise EX</a></div>
-            <div class="card-number">22/108</div>
-            <div class="card-rarity" title="Ultra Rara">Ultra Rara</div>
-            <div class="card-image"><img class="card-img" src="https://repositorio.ligapokemon.com.br/images/cartas/EVO/22.jpg" alt="M Blastoise EX" /></div>
-            <div class="price-box">
-                <span class="preco-menor">R$ 75,00</span>
-                <span class="preco-medio">R$ 95,00</span>
-            </div>
-        </div>
-    </div>
-    """,
-    "PRC": """
-    <div class="card-listing-container">
-        <div class="item-card" data-id="3001">
-            <div class="card-name"><a href="/?view=cards/card&card=Primal+Kyogre+EX&ed=PRC" title="Primal Kyogre EX">Primal Kyogre EX</a></div>
-            <div class="card-number">55/160</div>
-            <div class="card-rarity" title="Ultra Rara">Ultra Rara</div>
-            <div class="card-image"><img class="card-img" src="https://repositorio.ligapokemon.com.br/images/cartas/PRC/55.jpg" alt="Primal Kyogre EX" /></div>
-            <div class="price-box">
-                <span class="preco-menor">R$ 115,00</span>
-                <span class="preco-medio">R$ 140,00</span>
-            </div>
-        </div>
-        <div class="item-card" data-id="3002">
-            <div class="card-name"><a href="/?view=cards/card&card=M+Gardevoir+EX&ed=PRC" title="M Gardevoir EX">M Gardevoir EX</a></div>
-            <div class="card-number">106/160</div>
-            <div class="card-rarity" title="Ultra Rara">Ultra Rara</div>
-            <div class="card-image"><img class="card-img" src="https://repositorio.ligapokemon.com.br/images/cartas/PRC/106.jpg" alt="M Gardevoir EX" /></div>
-            <div class="price-box">
-                <span class="preco-menor">R$ 68,50</span>
-                <span class="preco-medio">R$ 85,00</span>
+                <span class="preco-menor">R$ 80,00</span>
+                <span class="preco-medio">R$ 100,00</span>
             </div>
         </div>
     </div>
     """,
     "DEFAULT": """
     <div class="card-listing-container">
-        <div class="item-card" data-id="9001">
-            <div class="card-name"><a href="/?view=cards/card&card=M+Lucario+EX&ed=PRC" title="M Lucario EX">M Lucario EX</a></div>
-            <div class="card-number">55/111</div>
+        <div class="item-card" data-id="999">
+            <div class="card-name"><a href="#">M Charizard EX</a></div>
+            <div class="card-number">13/108</div>
             <div class="card-rarity" title="Ultra Rara">Ultra Rara</div>
-            <div class="card-image"><img class="card-img" src="https://repositorio.ligapokemon.com.br/images/cartas/PRC/55.jpg" alt="M Lucario EX" /></div>
+            <div class="card-image"><img class="card-img" src="https://repositorio.ligapokemon.com.br/images/cartas/EVO/13.jpg" alt="M Charizard EX" /></div>
             <div class="price-box">
-                <span class="preco-menor">R$ 1.234,56</span>
-                <span class="preco-medio">R$ 1.500,00</span>
+                <span class="preco-menor">R$ 299,99</span>
+                <span class="preco-medio">R$ 350,00</span>
             </div>
         </div>
     </div>
