@@ -111,7 +111,7 @@ CREATE POLICY "Allow write access for authenticated users on price_history"
 -- -----------------------------------------------------------------------------
 -- Useful Views for Front-end & Queries
 -- -----------------------------------------------------------------------------
-CREATE OR REPLACE VIEW public.latest_card_prices AS
+CREATE OR REPLACE VIEW public.latest_card_prices WITH (security_invoker = true) AS
 SELECT DISTINCT ON (ph.card_id)
     ph.id AS price_id,
     c.id AS card_id,
