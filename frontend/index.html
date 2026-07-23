@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokémon Price Tracker - Mega Evolution Block</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo-area">
+        <h1 class="app-title">⚡ Pokémon Price Tracker</h1>
+        <span class="block-badge">Mega Evolution Block (XY Series)</span>
+      </div>
+      <p class="app-subtitle">Real-time market price monitoring for 8 Mega Evolution TCG expansion sets</p>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <!-- Controls Bar: Search & Expansion Filter -->
+    <section class="controls-bar">
+      <div class="search-box">
+        <label for="card-search" class="sr-only">Search Card</label>
+        <input 
+          type="text" 
+          id="card-search" 
+          placeholder="Search card by name (e.g. Rayquaza, Charizard)..."
+          autocomplete="off"
+        >
+      </div>
+
+      <div class="filter-box">
+        <label for="expansion-filter">Expansion Set:</label>
+        <select id="expansion-filter">
+          <option value="">All</option>
+          <option value="XY - Primal Clash">XY - Primal Clash</option>
+          <option value="XY - Roaring Skies">XY - Roaring Skies</option>
+          <option value="XY - Ancient Origins">XY - Ancient Origins</option>
+          <option value="XY - BREAKthrough">XY - BREAKthrough</option>
+          <option value="XY - BREAKpoint">XY - BREAKpoint</option>
+          <option value="XY - Fates Collide">XY - Fates Collide</option>
+          <option value="XY - Steam Siege">XY - Steam Siege</option>
+          <option value="XY - Evolutions">XY - Evolutions</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Cards Stats & Status Banner -->
+    <div class="status-bar">
+      <span id="results-count">Showing 0 cards</span>
+      <span id="datasource-badge" class="mode-badge">Offline Mock Data</span>
+    </div>
+
+    <!-- Cards Grid Container -->
+    <section id="cards-grid" class="cards-grid">
+      <!-- Card items will be dynamically rendered here -->
+    </section>
+  </main>
+
+  <!-- Price History Modal Dialog -->
+  <div id="price-history-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-card-title">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <h2 id="modal-card-title">Card Price History</h2>
+          <p id="modal-card-meta" class="modal-meta"></p>
+        </div>
+        <button id="close-modal" class="close-btn" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Snapshot Date</th>
+              <th>Min Price (R$)</th>
+              <th>Avg Price (R$)</th>
+              <th>Currency</th>
+            </tr>
+          </thead>
+          <tbody id="history-table-body">
+            <!-- Price history time-series rows dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <p>Pokémon Price Tracker &copy; 2026 — Mega Evolution Block Data Aggregator</p>
+  </footer>
+
+  <!-- External Supabase JS Library from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Supabase Client Init & Fallback Mock Store -->
+  <script src="supabaseClient.js"></script>
+  <!-- Main Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
