@@ -36,9 +36,22 @@ class ScraperHTTPClient:
         try:
             from playwright.sync_api import sync_playwright
             from playwright_stealth import Stealth
+            import os
+
+            # Tenta usar o Chrome ou Edge original da maquina ao inves do Chromium do Playwright
+            chrome_paths = [
+                r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+                r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+                r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+            ]
+            exec_path = None
+            for p in chrome_paths:
+                if os.path.exists(p):
+                    exec_path = p
+                    break
 
             self._playwright = sync_playwright().start()
-            self._browser = self._playwright.chromium.launch(headless=False)
+            self._browser = self._playwright.chromium.launch(headless=False, executable_path=exec_path)
             self._context = self._browser.new_context(
                 user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
                 viewport={"width": 1920, "height": 1080}
@@ -46,7 +59,7 @@ class ScraperHTTPClient:
             self._page = self._context.new_page()
             Stealth().apply_stealth_sync(self._page)
             
-            logger.info("Playwright Stealth browser initialized successfully.")
+            logger.info(f"Playwright Stealth browser initialized successfully (Browser: {exec_path}).")
         except ImportError as e:
             logger.warning(f"Playwright dependencies missing: {e}. Using mock transport mode.")
             self._page = None
