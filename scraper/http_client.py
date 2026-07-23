@@ -1,7 +1,7 @@
 """
 HTTP Client Transport Module.
-Handles HTTP requests to LigaPokemon with custom headers, timeouts, retry logic,
-and fallback fixture responses when the live network is unavailable.
+Handles HTTP requests to LigaPokemon using Playwright and Stealth plugin
+to bypass advanced Cloudflare bot protection.
 """
 
 import time
@@ -10,7 +10,6 @@ from typing import Optional, Dict, Any
 from .config import (
     BASE_URL,
     SEARCH_ENDPOINT,
-    DEFAULT_HEADERS,
     REQUEST_TIMEOUT_SECONDS,
     MAX_RETRIES,
     BACKOFF_FACTOR,
@@ -22,32 +21,38 @@ logger = logging.getLogger(__name__)
 
 
 class ScraperHTTPClient:
-    """Resilient HTTP client for fetching LigaPokemon expansion pages."""
+    """Playwright-based HTTP client for fetching LigaPokemon expansion pages."""
 
     def __init__(self, headers: Optional[Dict[str, str]] = None, timeout: int = REQUEST_TIMEOUT_SECONDS):
-        self.headers = headers or DEFAULT_HEADERS
-        self.timeout = timeout
-        self._session = None
+        self.timeout = timeout * 1000  # Playwright uses milliseconds
+        self._playwright = None
+        self._browser = None
+        self._context = None
+        self._page = None
         self._init_session()
 
     def _init_session(self):
-        """Initializes cloudscraper session to bypass Cloudflare protection."""
+        """Initializes Playwright browser session with Stealth to bypass Cloudflare."""
         try:
-            import cloudscraper
-            self._session = cloudscraper.create_scraper(
-                browser={'browser': 'chrome', 'platform': 'windows', 'mobile': False}
+            from playwright.sync_api import sync_playwright
+            from playwright_stealth import stealth_sync
+
+            self._playwright = sync_playwright().start()
+            self._browser = self._playwright.chromium.launch(headless=True)
+            self._context = self._browser.new_context(
+                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                viewport={"width": 1920, "height": 1080}
             )
-            self._session.headers.update(self.headers)
-            logger.info("Cloudscraper initialized successfully.")
-        except ImportError:
-            try:
-                import requests
-                self._session = requests.Session()
-                self._session.headers.update(self.headers)
-                logger.warning("cloudscraper not installed. Using basic requests.")
-            except ImportError:
-                logger.warning("requests library not installed. Using mock transport mode.")
-                self._session = None
+            self._page = self._context.new_page()
+            stealth_sync(self._page)
+            
+            logger.info("Playwright Stealth browser initialized successfully.")
+        except ImportError as e:
+            logger.warning(f"Playwright dependencies missing: {e}. Using mock transport mode.")
+            self._page = None
+        except Exception as e:
+            logger.warning(f"Failed to launch Playwright: {e}. Using mock transport mode.")
+            self._page = None
 
     def fetch_expansion_page(self, expansion_code: str, page: int = 1) -> str:
         """
@@ -57,23 +62,25 @@ class ScraperHTTPClient:
         url = f"{SEARCH_ENDPOINT}&card=ed={expansion_code}&page={page}"
         logger.info(f"Fetching expansion {expansion_code} (page {page}): {url}")
 
-        if self._session is None:
+        if self._page is None:
             return self._get_mock_fixture(expansion_code)
 
         for attempt in range(1, MAX_RETRIES + 1):
             try:
-                response = self._session.get(url, timeout=self.timeout)
-                if response.status_code == 200:
-                    time.sleep(REQUEST_DELAY_SECONDS)
-                    return response.text
-                elif response.status_code == 429:
-                    logger.warning(f"Rate limited (HTTP 429) on attempt {attempt}. Retrying...")
+                response = self._page.goto(url, timeout=self.timeout, wait_until="domcontentloaded")
+                time.sleep(REQUEST_DELAY_SECONDS * 3) # Give it extra time to pass JS challenge
+                
+                content = self._page.content()
+                if response and response.status == 403:
+                    logger.warning(f"Playwright got HTTP 403 on attempt {attempt}. Retrying...")
+                elif "Just a moment..." in content or "cloudflare" in content.lower() or "Desafio" in content:
+                    logger.warning(f"Cloudflare challenge detected on attempt {attempt}. Retrying...")
                 else:
-                    logger.warning(f"HTTP status {response.status_code} for {url}. Attempt {attempt}/{MAX_RETRIES}")
+                    return content
+                    
             except Exception as exc:
-                logger.warning(f"Network request failed ({exc}) for {url}. Attempt {attempt}/{MAX_RETRIES}")
+                logger.warning(f"Playwright request failed ({exc}) for {url}. Attempt {attempt}/{MAX_RETRIES}")
 
-            # Sleep with backoff before retry
             if attempt < MAX_RETRIES:
                 time.sleep(BACKOFF_FACTOR ** attempt)
 
@@ -83,3 +90,13 @@ class ScraperHTTPClient:
     def _get_mock_fixture(self, expansion_code: str) -> str:
         """Returns pre-defined sample HTML fixture for specified expansion or default."""
         return SAMPLE_HTML_FIXTURES.get(expansion_code, SAMPLE_HTML_FIXTURES["DEFAULT"])
+        
+    def __del__(self):
+        """Cleanup browser resources."""
+        try:
+            if self._browser:
+                self._browser.close()
+            if self._playwright:
+                self._playwright.stop()
+        except Exception:
+            pass
